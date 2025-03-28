@@ -1,1 +1,53 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Course Reviews</h1>
+        <p>Search for a course review or leave one</p>
+    </header>
+
+    <main class="container">
+        <section id="form">
+            <form>
+              <label for="search">Course Name</label>
+              <input type="search" id="search" name="Course Name" placeholder="Type the course name and code">
+
+              <label for="date">Show reviews after:
+              <input type="date" id="date" name="date"></label>
+
+              <input type="submit" value="Filter">
+            </form>
+        </section>
+
+        <br>
+        <h2>Reviews</h2>
+        <details>
+            <summary role="button">ITCS333</summary>
+            <p>Adel Buabood's rating: ***** Stars <button>Check Review</button></p>
+        </details>
+
+        <br>
+        <button>Submit a Review</button>
+
+        <br>
+
+
+        <br>
+        <div role="group">
+            <button href="#">&laquo;</button>
+            <button aria-current="true" href="#">1</button>
+            <button href="#">2</button>
+            <button href="#">3</button>
+            <button href="#">&raquo;</button>
+          </div>
+
+    </main>
+    
+</body>
+</html>

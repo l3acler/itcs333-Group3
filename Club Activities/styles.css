@@ -1,0 +1,7 @@
+#navbar{
+   justify-content: space-around;
+}
+#navbar ul li a {
+    text-decoration: none;
+    color: inherit;
+ }

@@ -1,7 +1,93 @@
-#navbar{
-   justify-content: space-around;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--primary-color);
 }
-#navbar ul li a {
-    text-decoration: none;
-    color: inherit;
- }
+
+html {
+    background-color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
+
+nav {
+    height: auto;
+}
+
+nav li {
+    padding: 6px 12px;
+}
+
+.logo {
+    font-size: 28px;
+}
+
+main {
+    padding-top: 10px;
+}
+
+#hero {
+    height: 40vh;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--background-color);
+}
+
+#hero-div {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#hero-heading-container {
+    width: 100%;
+    text-align: center;
+}
+
+#hero-input-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+#hero-search {
+    margin: auto 0;
+}
+
+#hero-input-container i {
+    margin: auto 0 auto 12px;
+}
+
+#featured-section {}
+
+#featured-heading-div {
+    align-content: center;
+    text-align: center;
+}
+
+#featured-clubs-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.featured-club {
+
+    background-color: var(--background-color);
+    
+    border-radius: 0.5rem;
+    padding: 16px;
+    margin: 12px;
+    width: 30%;
+    height: 50%;
+}
+
+.featured-club-title h4,
+p {
+
+}

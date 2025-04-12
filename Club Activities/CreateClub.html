@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Activities</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
+    <link rel="stylesheet" href="CreateClub.css">
+    <link rel="stylesheet" href="../Colors.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <main id="main">
+        <a href="./ClubActivities.html"><button id="back-button">Go Back</button></a>
+        <section id="create-section">
+            <div id="create-container">
+                <form action="">
+                    <label id="label" for="club-name" required>Club Name
+                        <input id="club-name" type="text" placeholder="Enter Club Name">
+                    </label>
+                    <label id="label" for="club-description" required>Club Description
+                        <input id="club-description" type="text" placeholder="Enter Club Description">
+                    </label>
+                    <label id="label" for="club-category">Club Category
+                        <select name="category" id="club-category" aria-label="Select your Club Category..." required>
+                            <option selected disabled value="">Select your Club Category...</option>
+                            <option>Academic</option>
+                            <option>Sports</option>
+                            <option>Cultural</option>
+                            <option>Arts & Creativity</option>
+                            <option>Social</option>
+                            <option>General Interest</option>
+                        </select>
+                    </label>
+                    <label id="label" for="club-logo">
+                        Club Logo
+                        <input type="file">
+                    </label>
+                    <button class="contrast">Create Club</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

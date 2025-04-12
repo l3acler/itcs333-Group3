@@ -1,0 +1,37 @@
+#main {
+    padding-block: 0px;
+    height: 100vh;
+}
+
+#back-button {
+    margin: 12px;
+}
+
+#activity-detail-section {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: top;
+    margin-top: 48px;
+}
+
+#activity-detail-container {
+    margin:   0 auto;
+    padding: 24px;
+    background-color: var(--pico-off-color);
+    height: fit-content;
+    width: 60%;
+    border-radius: 16px;
+}
+
+#activity-name {
+    margin: 0;
+}
+
+.activity-info {
+    margin-top: 16px;
+}
+
+.label {
+    margin: 0;
+}

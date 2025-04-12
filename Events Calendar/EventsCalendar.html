@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Calendar</title>
+    <link rel="stylesheet" href="EventsStyle.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
+</head>
+
+<body>
+<main class="container">
+    <h1>Events Calendar</h1>
+
+    <form id="start">
+        <label for="events">All Events</label>
+        <input id="events" type="search" placeholder="Search Events..." style="width: 300px">
+        <br>
+        <select style="width: 300px">
+            <option selected disabled>Select event by type</option>
+            <option>Workshop</option>
+            <option>Seminar</option>
+            <option>Festival</option>
+        </select>
+        <br>
+        <select style="width: 300px">
+            <option selected disabled>Sort by</option>
+            <option>Date</option>
+            <option>Time</option>
+        </select>
+    </form>
+
+    <div id="box">
+        <article>
+            <h3>Student Orientation</h3>
+            <p><strong>Date:</strong> 2025/4/19</p>
+            <p><strong>Time:</strong> 3:00pm</p>
+            <a href="#details"> show details</a>
+        </article>
+    </div>
+
+    <div id="box">
+        <article>
+            <h3>Career Fair</h3>
+            <p><strong>Date:</strong> 2025/5/09</p>
+            <p><strong>Time:</strong> 1:00pm</p>
+            <a href="#details"> show details</a>
+        </article>
+    </div>
+
+    <a href="#creat">
+        <button>+ add new event</button>
+    </a>
+    <br>
+    <br>
+    <div id="creat">
+
+        <form>
+            <label>
+                Event name
+                <input type="text" placeholder="Event Name..." required>
+            </label>
+
+            <label>
+                date
+                <input type="date">
+            </label>
+            <label>
+                time
+                <input type="time">
+            </label>
+            <label>
+                location
+                <input type="text" placeholder="Event Location...">
+            </label>
+
+            <lable>
+                Event Description
+                <input type="text" placeholder="Describe Event...">
+            </lable>
+            <button type="reset"> Reset</button>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <a href="#start">back to listing</a>
+    <br>
+    <br>
+    <footer class="container">campus hub</footer>
+</main>
+</body>
+</html>

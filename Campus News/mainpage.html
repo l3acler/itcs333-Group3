@@ -20,6 +20,18 @@
   </header>
 
   <main class="container">
+
+    <form id="filter-form">
+      <input type="search" id="search" placeholder="Search news..." />
+      <select id="category">
+        <option value="all">All Categories</option>
+        <option value="events">Events</option>
+        <option value="announcements">Announcements</option>
+      </select>
+      <select id="sort">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+
     <form>
       <input type="search" placeholder="Search news..." />
       <select>
@@ -30,9 +42,16 @@
       <select>
         <option>Sort by Date</option>
         <option>Sort by Popularity</option>
+
       </select>
       <input type="submit" value="Filter" />
     </form>
+
+
+    <div id="loading" style="display: none;">Loading news...</div>
+
+    <h2>Latest News</h2>
+    <div id="news-list"></div>
 
     <h2>Latest News</h2>
     
@@ -50,8 +69,19 @@
       <p><small>Published on: March 28, 2025</small></p>
     </article>
 
+
     <br>
     <a href="form.html" role="button">Add News</a>
+
+
+    <br><br>
+    <div id="pagination" role="group"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
 
     <br>
     <br>

@@ -1,0 +1,19 @@
+[
+    {
+      "id": 1,
+      "title": "New Library Opens on Campus",
+      "summary": "Our campus just opened a new library with state-of-the-art facilities. Read more to find out...",
+      "content": "Full detailed article for New Library.",
+      "date": "2025-03-30",
+      "category": "announcements"
+    },
+    {
+      "id": 2,
+      "title": "Annual Sports Day Coming Soon",
+      "summary": "The much-awaited Annual Sports Day will be held on April 15th. Get ready to cheer for your favorite teams!",
+      "content": "Full details about the Sports Day.",
+      "date": "2025-03-28",
+      "category": "events"
+    }
+  ]
+  

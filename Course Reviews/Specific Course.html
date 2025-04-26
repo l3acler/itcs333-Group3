@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Specific Course Reviews</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script src="Specific Course.js"></script>
 </head>
 <body>
     <nav>
@@ -44,13 +45,15 @@
             </form>
         </section>
         
-        <article>
-          Adel Buabood: &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F Stars Date: 29/3/2025<p> I liked this course and benefited a lot form it.</p>
-          <a href="Review&comments.html"><button>Check Review and Comments</button></a>
-        </article>
+        <div id="reviews">
+          <article>
+            Adel Buabood: &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F Stars Date: <date>29/3/2025</date><p> I liked this course and benefited a lot form it.</p>
+            <a href="Review&comments.html"><button>Check Review and Comments</button></a>
+          </article>
+        </div>
 
         <br>
-        <div role="group">
+        <div role="group" id="pagination-wrapper">
             <button href="#">&laquo;</button>
             <button aria-current="true" href="#">1</button>
             <button href="#">2</button>

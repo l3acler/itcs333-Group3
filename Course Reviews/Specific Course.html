@@ -27,8 +27,8 @@
     </nav>
 
     <header class="container">
-        <h1>ITCS333 Reviews</h1>
-        <p>Total Rating: &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F Stars</p>
+        <h1 id="courseTitle">ITCS333 Reviews</h1>
+        <p>Total Rating: <strong id="totalRating">&#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F</strong> Stars</p>
     </header>
 
     <main class="container">
@@ -37,14 +37,29 @@
         </h2>
         
         <section>
-            <form>
+            <form id="filterForm">
+              <label for ="rating">Rating:
+                <select name="rating" id="rating" aria-label="Select the rating you want to filter by">
+                    <option selected disabled value="">Select the rating</option>
+                    <option value="5">&#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F</option>
+                    <option value="4">&#x1F31F &#x1F31F &#x1F31F &#x1F31F</option>
+                    <option value="3">&#x1F31F &#x1F31F &#x1F31F</option>
+                    <option value="2">&#x1F31F &#x1F31F</option>
+                    <option value="1">&#x1F31F</option>
+                </select></label>
               <label for="date">Show Reviews After:
               <input type="date" id="date" name="date"></label>
 
               <input type="submit" value="Filter">
             </form>
         </section>
+        <p id="error" style="color: red;"></p>
         
+        <div id="loading-spinner" style="display: none; text-align: center;">
+            <progress></progress>
+            <p>Loading...</p>
+        </div>
+
         <div id="reviews">
           <article>
             Adel Buabood: &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F Stars Date: <date>29/3/2025</date><p> I liked this course and benefited a lot form it.</p>

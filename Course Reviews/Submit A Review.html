@@ -5,30 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review Form</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script src="Submit A Review.js"></script>
 </head>
 <body>
     <header class="container">
         <h1>Leave a review</h1>
-        <p>Date: 29/3/2025</p>
+        <date id="currentDate">Date: 29/3/2025</date>
     </header>
 
     <main class="container">
         <section>
             <form>
-                <select name="Course" aria-label="Select the course you want to review" required>
+                <select name="Course" id="course" aria-label="Select the course you want to review" required>
                     <option selected disabled value="">
                         Select the course you want to review
                     </option>
-                    <option>ITCS333</option>
-                    <option>ITCS347</option>
-                    <option>ITCS321</option>
+                    
                   </select>
                 <h2>
                     Choose the rating:
                 </h2>
         
                 <fieldset>
-                    <legend><strong>Radio buttons</strong></legend>
+                    <legend><strong></strong></legend>
                     <label for="radio-1">
                       <input type="radio" id="radio-1" name="radio" value="radio-1" checked>
                       &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F
@@ -56,6 +55,7 @@
                     Feedback:
                 </h2>
                 <textarea name="feedback" placeholder="Write your feedback" aria-label="feedback"></textarea>
+                <p id="error" style="color: red;"></p>
 
               <input type="submit" value="Submit">
               <input type="reset" value="Cancel">

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const currentDateElement = document.getElementById("currentDate");
-    const courseSelectElement = document.getElementById("course");
+    const courseSelectElement = document.getElementById("course"); // Ensure this matches the HTML
     const form = document.querySelector("form");
     const feedbackTextarea = document.querySelector("textarea[name='feedback']");
     const errorElement = document.getElementById("error");
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Set the current date
     if (currentDateElement) {
         const today = new Date();
-        const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+        const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
         currentDateElement.textContent = `Date: ${formattedDate}`;
     }
 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(courses => {
                 courses.forEach(course => {
                     const option = document.createElement("option");
-                    option.value = course.courseCode; // Use courseCode as the value
+                    option.value = course.courseId; // Use courseId as the value
                     option.textContent = course.courseCode;
                     courseSelectElement.appendChild(option);
                 });
@@ -44,26 +44,23 @@ document.addEventListener("DOMContentLoaded", () => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Validate feedback
-            if (!feedbackTextarea.value.trim()) {
-                errorElement.textContent = "Please provide feedback before submitting.";
+            // Prepare form data
+            const formData = {
+                courseId: courseSelectElement.value, // Get courseId from the selected option
+                posterId: 3, // Fixed value
+                name: "Guest", // Fixed value
+                date: new Date().toISOString().split('T')[0], // Use the current date in YYYY-MM-DD format
+                rating: document.querySelector('input[name="radio"]:checked')?.value, // Get the selected rating
+                content: feedbackTextarea.value // Get the feedback content
+            };
+
+            // Validate form data
+            if (!formData.courseId || !formData.rating || !formData.content.trim()) {
+                errorElement.textContent = "Please fill out all required fields.";
                 return;
             } else {
                 errorElement.textContent = ""; // Clear the error message
             }
-
-            // Get the selected rating from the radio buttons
-            const selectedRating = document.querySelector('input[name="radio"]:checked')?.value;
-
-            // Prepare form data
-            const formData = {
-                courseId: courseSelectElement.value, // Get courseId from the select element
-                posterId: 3, // Fixed value
-                name: "Guest", // Fixed value
-                date: currentDateElement.textContent.replace('Date: ', ''), // Use the current date
-                rating: selectedRating, // Get the selected rating
-                content: feedbackTextarea.value // Get the feedback content
-            };
 
             try {
                 // Send the review data to the API
@@ -76,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (response.ok) {
                     form.reset(); // Clear the form
                     alert("Review submitted successfully!");
+                    window.location.href = "All Course Reviews.html"; // Redirect to All Course Reviews.html
                 } else {
                     const errorData = await response.json();
                     console.error("Error submitting review:", errorData);

@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const rating = review.rating || 'No rating';
                     const date = review.date || 'No date';
                     const content = review.content || 'No content';
-                    html += `<article>${id} <date>${date}</date> <strong>Rating: ${rating} Stars</strong><p>(${name})</p><p>(${content})</p><a href="Review&comments.html?reviewId=${id}"><button>Check Review and Comments</button></a></article>`;
+                    html += `<article><date>${date}</date> <strong>Rating: ${rating} Stars</strong><p>(${name})</p><p>(${content})</p><a href="Review&comments.html?reviewId=${id}"><button>Check Review and Comments</button></a></article>`;
                 });
             } else {
                 html += `<article>${JSON.stringify(state.set)}</article>`;

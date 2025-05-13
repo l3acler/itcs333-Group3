@@ -48,20 +48,14 @@ const state = {
       showLoading(true);
       
       // For demo purposes, using a setTimeout to simulate network delay
-      setTimeout(async () => {
+      setTimeout(() => {
         try {
-          // Fetch data from our mock JSON file
-          const response = await fetch('./db.json');
+          // Use mock data directly instead of fetching
+          const notes = getMockNotes();
           
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          const data = await response.json();
-          
-          // Update state with the notes from our JSON file
-          state.notes = data.notes || [];
-          state.filteredNotes = [...state.notes];
+          // Update state
+          state.notes = notes;
+          state.filteredNotes = [...notes];
           
           // Render notes
           renderNotes();

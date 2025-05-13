@@ -9,7 +9,7 @@
 <body>
   <nav>
     <ul><li><a href="#" role="button">&#9776;</a></li></ul>
-    <ul><li><a href="index.html">Home Page</a></li></ul>
+    <ul><li><a href="../index.html">Home Page</a></li></ul>
     <ul><li><strong>Campus Hub</strong></li></ul>
     <ul><li><a href="#">Login</a></li></ul>
   </nav>
@@ -25,9 +25,40 @@
     </article>
 
     <br>
-    <a href="index.html" role="button">&laquo; Back to News</a>
+    <a href="mainpage.html" role="button">&laquo; Back to News</a>
+
+    <section id="comments-section">
+      <h2>Comments</h2>
+      <div id="comments-container">
+        <!-- Comments will be displayed here -->
+      </div>
+
+      <form id="comment-form">
+        <label for="comment">Add a Comment:</label>
+        <textarea id="comment" name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+        <input type="submit" value="Post Comment">
+      </form>
+    </section>
   </main>
 
   <script src="app.js"></script>
+  <script>
+    const commentForm = document.getElementById('comment-form');
+    const commentsContainer = document.getElementById('comments-container');
+
+    commentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const commentText = document.getElementById('comment').value;
+
+      if (commentText.trim() !== '') {
+        const commentElement = document.createElement('p');
+        commentElement.textContent = commentText;
+        commentsContainer.appendChild(commentElement);
+
+        // Clear the textarea
+        document.getElementById('comment').value = '';
+      }
+    });
+  </script>
 </body>
 </html>

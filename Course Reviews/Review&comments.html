@@ -9,9 +9,7 @@
 </head>
 <body>
     <nav>
-        <ul>
-
-        </ul>
+        <ul></ul>
         <ul>
           <li><a id="backToCourse" href="Specific Course.html">&laquo;Back to Reviews</a></li>
         </ul>
@@ -21,9 +19,7 @@
         <ul>
           <li><a href="#">Login</a></li>
         </ul>
-        <ul>
-
-        </ul>
+        <ul></ul>
     </nav>
 
     <header class="container">
@@ -33,37 +29,35 @@
     </header>
 
     <main class="container">
-        <h2>
-            Review:
-        </h2>
+        <h2>Review:</h2>
         <article id="reviewContent">
-            I liked this course and benefited a lot form it.
+            I liked this course and benefited a lot from it.
         </article>
 
         <hr>
-        <h3>
-            Comments:
-        </h3>
+        <h3>Comments:</h3>
         <section>
             <form id="commentForm">
                 <label for="text">Comment</label>
-                <input type="text" id="text" name="Comment" placeholder="Comment">
+                <input type="text" id="text" name="text" placeholder="Comment">
                 <small>Leave a Comment</small>
 
-              <input type="submit" value="Submit">
+                <input type="submit" value="Submit">
             </form>
         </section>
+        <p id="error" style="color: red;"></p>
         <hr>
+        
+        <!--- Disabled filter form doesn't work for some reason
         <section>
             <form id="filterForm">
-              <label for="date">Show Comments After:
-              <input type="date" id="date" name="date"></label>
+                Show Comments After:
+                <input type="date" id="date" name="date">
 
-              <input type="submit" value="Filter">
+                <input type="submit" value="Filter">
             </form>
         </section>
-        
-        <p id="error" style="color: red;"></p>
+      -->
 
         <div id="loading-spinner" style="display: none; text-align: center;">
           <progress></progress>
@@ -78,8 +72,6 @@
 
         <br>
         <div role="group" id="pagination-wrapper"></div>
-
     </main>
-    
 </body>
 </html>

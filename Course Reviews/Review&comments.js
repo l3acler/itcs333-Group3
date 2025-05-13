@@ -88,12 +88,23 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Get the comment content
+        const commentContent = document.getElementById('text').value.trim();
+
+        // Validate the comment content
+        if (!commentContent) {
+            errorElement.textContent = "Comment cannot be empty.";
+            return;
+        } else {
+            errorElement.textContent = ""; // Clear any previous error messages
+        }
+
         // Prepare form data
         const formData = {
             reviewId: reviewId, // Use the reviewId from the current page
             name: "Guest", // Fixed value
-            date: new Date().toLocaleDateString(), // Current date in DD/MM/YYYY format
-            content: document.getElementById('text').value // Get the content from the text input
+            date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+            content: commentContent // Use the trimmed comment content
         };
 
         try {
@@ -190,20 +201,25 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingSpinner.style.display = show ? 'block' : 'none';
     }
 
-    document.getElementById('filterForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        const filterDate = document.getElementById('date').value;
+    //document.getElementById('filterForm').addEventListener('submit', (event) => {
+    //    event.preventDefault();
+    //    const filterDate = document.getElementById('date').value;
 
-        if (filterDate) {
-            state.filteredComments = state.comments.filter(comment => new Date(comment.date) >= new Date(filterDate));
-        } else {
-            state.filteredComments = state.comments;
-        }
+    //    if (filterDate) {
+            // Normalize both the filter date and comment dates to YYYY-MM-DD format
+    //        const selectedDate = new Date(filterDate).toISOString().split('T')[0];
+    //        state.filteredComments = state.comments.filter(comment => {
+    //            const commentDate = new Date(comment.date).toISOString().split('T')[0];
+    //            return commentDate >= selectedDate;
+    //        });
+    //    } else {
+    //        state.filteredComments = state.comments;
+    //    }
 
-        state.page = 1;
-        displayComments();
-        setupPagination();
-    });
+    //    state.page = 1;
+    //    displayComments();
+    //    setupPagination();
+    //});
 
     fetchAndDisplayReview();
 });

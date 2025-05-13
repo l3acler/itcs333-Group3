@@ -61,8 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(`Failed to fetch reviews: ${response.status} ${response.statusText}`);
             }
             const reviews = await response.json();
+
+            // Log the reviews to verify the structure
+            console.log("Fetched reviews:", reviews);
+
             // Filter reviews for the specific course
-            return reviews.filter(review => review.courseId === courseId).slice(0, 5); // Limit to 5 reviews
+            return reviews.filter(review => review.courseId == courseId).slice(0, 5); // Limit to 5 reviews
         } catch (error) {
             console.error(`Error fetching reviews for course ${courseId}:`, error);
             return [];

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fetch courses from the API
     toggleLoading(true); // Show the loading spinner
-    fetch('https://681e45b1c1c291fa66339f80.mockapi.io/333reviews/courses')
+    fetch('https://3d119289-7941-49ae-853e-6c46621ce2bf-00-2l5z9rmdmv5cz.sisko.replit.dev/api.php/courses')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status} ${response.statusText}`);
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchReviewsForCourse(courseId) {
         try {
-            const response = await fetch('https://681e45b1c1c291fa66339f80.mockapi.io/333reviews/ReviewsITCS333');
+            const response = await fetch('https://3d119289-7941-49ae-853e-6c46621ce2bf-00-2l5z9rmdmv5cz.sisko.replit.dev/api.php/reviews');
             if (!response.ok) {
                 throw new Error(`Failed to fetch reviews: ${response.status} ${response.statusText}`);
             }
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let html = '';
         for (const course of courses) {
-            const reviews = await fetchReviewsForCourse(course.id); // Fetch reviews for the course
+            const reviews = await fetchReviewsForCourse(course.courseId); // Fetch reviews for the course
             let reviewsHtml = '';
 
             reviews.forEach(review => {
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <strong>${review.name || 'Anonymous'}</strong>:
                         <span>${'&#x1F31F '.repeat(review.rating || 0).trim()} (${review.rating || 'No Rating'} Stars)</span>
                         <span>Date: ${review.date || 'No Date'}</span>
-                        <a href="Review&comments.html?reviewId=${review.id}"><button>Check Review</button></a>
+                        <a href="Review&comments.html?reviewId=${review.reviewId}"><button>Check Review</button></a>
                     </div>
                     <br>
                 `;
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <summary role="button">${course.courseCode || 'No Course Code'}</summary>
                     ${reviewsHtml || '<p>No reviews available for this course.</p>'}
                     <p>
-                        <a href="Specific Course.html?courseId=${course.id}">
+                        <a href="Specific Course.html?courseId=${course.courseId}">
                             <button>Check More Reviews</button>
                         </a>
                     </p>

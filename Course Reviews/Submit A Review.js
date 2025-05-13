@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fetch courses and populate the select options
     if (courseSelectElement) {
-        fetch('https://681e45b1c1c291fa66339f80.mockapi.io/333reviews/courses')
+        fetch('https://3d119289-7941-49ae-853e-6c46621ce2bf-00-2l5z9rmdmv5cz.sisko.replit.dev/api.php/courses')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Failed to fetch courses: ${response.status} ${response.statusText}`);
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(courses => {
                 courses.forEach(course => {
                     const option = document.createElement("option");
-                    option.value = course.courseCode;
+                    option.value = course.courseCode; // Use courseCode as the value
                     option.textContent = course.courseCode;
                     courseSelectElement.appendChild(option);
                 });
@@ -39,14 +39,51 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // Prevent form submission without feedback
+    // Handle form submission
     if (form) {
-        form.addEventListener("submit", (event) => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validate feedback
             if (!feedbackTextarea.value.trim()) {
-                event.preventDefault(); // Prevent form submission
                 errorElement.textContent = "Please provide feedback before submitting.";
+                return;
             } else {
                 errorElement.textContent = ""; // Clear the error message
+            }
+
+            // Get the selected rating from the radio buttons
+            const selectedRating = document.querySelector('input[name="radio"]:checked')?.value;
+
+            // Prepare form data
+            const formData = {
+                courseId: courseSelectElement.value, // Get courseId from the select element
+                posterId: 3, // Fixed value
+                name: "Guest", // Fixed value
+                date: currentDateElement.textContent.replace('Date: ', ''), // Use the current date
+                rating: selectedRating, // Get the selected rating
+                content: feedbackTextarea.value // Get the feedback content
+            };
+
+            try {
+                // Send the review data to the API
+                const response = await fetch('https://3d119289-7941-49ae-853e-6c46621ce2bf-00-2l5z9rmdmv5cz.sisko.replit.dev/api.php/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    form.reset(); // Clear the form
+                    alert("Review submitted successfully!");
+                } else {
+                    const errorData = await response.json();
+                    console.error("Error submitting review:", errorData);
+                    errorElement.textContent = "Failed to submit the review. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error adding review:", error);
+                errorElement.textContent = "An error occurred while submitting the review. Please try again.";
             }
         });
     }

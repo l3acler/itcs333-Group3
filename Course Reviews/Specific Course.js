@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Fetch the course data and update the courseTitle
-    fetch(`https://681e45b1c1c291fa66339f80.mockapi.io/333reviews/courses/${courseId}`)
+    fetch(`https://3d119289-7941-49ae-853e-6c46621ce2bf-00-2l5z9rmdmv5cz.sisko.replit.dev/api.php/courses/${courseId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch course: ${response.status} ${response.statusText}`);
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     // Fetch reviews and filter them by courseId
-    fetch('https://681e45b1c1c291fa66339f80.mockapi.io/333reviews/ReviewsITCS333')
+    fetch('https://3d119289-7941-49ae-853e-6c46621ce2bf-00-2l5z9rmdmv5cz.sisko.replit.dev/api.php/reviews')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
@@ -216,12 +216,13 @@ document.addEventListener("DOMContentLoaded", () => {
             let html = '';
             if (Array.isArray(state.set)) {
                 let pageInfo = pagination(state.set, state.page, state.rows);
-                pageInfo.set.forEach(ReviewsITCS333 => {
-                    const id = ReviewsITCS333.id || 'Unknown';
-                    const title = ReviewsITCS333.name || 'No title';
-                    const rating = ReviewsITCS333.rating || 'No rating';
-                    const date = ReviewsITCS333.date || 'No date';
-                    html += `<article>${id} <date>${date}</date> <strong>Rating: ${rating} Stars</strong><p>(${title})</p><a href="Review&comments.html?reviewId=${id}"><button>Check Review and Comments</button></a></article>`;
+                pageInfo.set.forEach(review => {
+                    const id = review.reviewId || 'Unknown';
+                    const name = review.name || 'No name';
+                    const rating = review.rating || 'No rating';
+                    const date = review.date || 'No date';
+                    const content = review.content || 'No content';
+                    html += `<article>${id} <date>${date}</date> <strong>Rating: ${rating} Stars</strong><p>(${name})</p><p>(${content})</p><a href="Review&comments.html?reviewId=${id}"><button>Check Review and Comments</button></a></article>`;
                 });
             } else {
                 html += `<article>${JSON.stringify(state.set)}</article>`;

@@ -47,25 +47,28 @@ const state = {
     try {
       showLoading(true);
       
-      // For demo purposes, using a setTimeout to simulate network delay
-      setTimeout(() => {
-        try {
-          // Use mock data directly instead of fetching
-          const notes = getMockNotes();
-          
-          // Update state
-          state.notes = notes;
-          state.filteredNotes = [...notes];
-          
-          // Render notes
-          renderNotes();
-          updatePagination();
-          
-          showLoading(false);
-        } catch (error) {
-          handleError(error);
+      try {
+        // Fetch data from our API
+        const response = await fetch('api/notes/index.php');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      }, 1000);
+        
+        const data = await response.json();
+        
+        // Update state with the notes from our API
+        state.notes = data.notes || [];
+        state.filteredNotes = [...state.notes];
+        
+        // Render notes
+        renderNotes();
+        updatePagination();
+        
+        showLoading(false);
+      } catch (error) {
+        handleError(error);
+      }
     } catch (error) {
       handleError(error);
     }
@@ -582,23 +585,80 @@ const state = {
     });
     
     if (isValid) {
-      // Show success message
-      const successMessage = document.createElement('div');
-      successMessage.className = 'success-message';
-      successMessage.innerHTML = `
-        <div style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
-          <p><strong>Success!</strong> Your notes have been submitted.</p>
-          <p>You will be redirected to the notes page in a few seconds...</p>
+      // Create FormData object for file upload
+      const form = event.target;
+      const formData = new FormData(form);
+      
+      // Map form field names to API expected names
+      formData.set('courseCode', form.querySelector('#course-code').value);
+      formData.set('courseName', form.querySelector('#course-name').value);
+      formData.set('title', form.querySelector('#note-title').value);
+      formData.set('description', form.querySelector('#description').value);
+      formData.set('instructor', form.querySelector('#instructor').value);
+      formData.set('noteType', form.querySelector('#note-type').value);
+      formData.set('semester', form.querySelector('#semester').value);
+      formData.set('topics', form.querySelector('#topics-covered').value);
+      formData.append('file', form.querySelector('#notes-file').files[0]);
+      
+      // Show loading state
+      const loadingIndicator = document.createElement('div');
+      loadingIndicator.className = 'loading-indicator';
+      loadingIndicator.innerHTML = `
+        <div style="text-align: center; padding: 1rem;">
+          <div class="spinner"></div>
+          <p>Uploading note...</p>
         </div>
       `;
+      form.prepend(loadingIndicator);
       
-      // Insert at the top of the form
-      event.target.prepend(successMessage);
-      
-      // Redirect after a delay
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 3000);
+      // Submit the form to the API
+      fetch('api/notes/create.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.message || 'Failed to create note');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Show success message
+        loadingIndicator.remove();
+        const successMessage = document.createElement('div');
+        successMessage.className = 'success-message';
+        successMessage.innerHTML = `
+          <div style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+            <p><strong>Success!</strong> Your notes have been submitted.</p>
+            <p>You will be redirected to the notes page in a few seconds...</p>
+          </div>
+        `;
+        
+        // Insert at the top of the form
+        form.prepend(successMessage);
+        
+        // Redirect after a delay
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 3000);
+      })
+      .catch(error => {
+        // Show error message
+        loadingIndicator.remove();
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.style.marginBottom = '1rem';
+        errorMessage.innerHTML = `
+          <div style="background-color: #f8d7da; color: #721c24; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+            <p><strong>Error:</strong> ${error.message || 'Failed to create note'}</p>
+          </div>
+        `;
+        form.prepend(errorMessage);
+        
+        console.error('API Error:', error);
+      });
     }
   }
   
@@ -623,16 +683,14 @@ const state = {
     `;
     
     try {
-      // Use getMockNotes directly instead of fetching
-      const notes = getMockNotes();
+      // Fetch data from our API
+      const response = await fetch(`api/notes/get.php?id=${noteId}`);
       
-      // Find the note with the matching ID
-      const note = notes.find(n => n.id === parseInt(noteId));
-      
-      if (!note) {
-        displayNotFoundMessage();
-        return;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const note = await response.json();
       
       // Render note details
       renderNoteDetails(note);
@@ -724,7 +782,7 @@ const state = {
             </div>
           </div>
           <div style="text-align: right;">
-            <a href="#" role="button">Download Notes</a>
+            <a href="api/notes/download.php?id=${note.id}" role="button">Download Notes</a>
           </div>
         </div>
   
@@ -786,12 +844,34 @@ const state = {
   // Initialize Star Rating
   function initializeStarRating() {
     const stars = document.querySelectorAll('.star-rating .star');
-    const ratingMessage = document.getElementById('rating-message');
-    
-    stars.forEach(star => {
-      star.addEventListener('click', function() {
-        const value = parseInt(this.getAttribute('data-value'));
-        
+  const ratingMessage = document.getElementById('rating-message');
+  
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      const value = parseInt(this.getAttribute('data-value'));
+      
+      // Get note ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const noteId = urlParams.get('id');
+      
+      // Submit rating to API
+      fetch('api/notes/rate.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          noteId: noteId,
+          rating: value
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to submit rating');
+        }
+        return response.json();
+      })
+      .then(data => {
         // Remove active class from all stars
         stars.forEach(s => s.classList.remove('active'));
         
@@ -805,9 +885,20 @@ const state = {
         // Show thank you message
         ratingMessage.textContent = `Thanks for rating ${value}/5!`;
         
-        // In a real app, we would send this rating to the server
-        console.log(`User rated: ${value}/5`);
+        // Update average rating display
+        const ratingSpan = document.querySelector('.rating .star');
+        const ratingCountSpan = document.querySelector('.rating span:last-child');
+        
+        if (ratingSpan && ratingCountSpan) {
+          ratingSpan.innerHTML = getRatingStars(data.rating.average);
+          ratingCountSpan.textContent = `(${data.rating.average}/5 from ${data.rating.count} ratings)`;
+        }
+      })
+      .catch(error => {
+        alert(`Error: ${error.message}`);
       });
+    });
+    
       
       // Hover effect
       star.addEventListener('mouseover', function() {
@@ -843,31 +934,47 @@ const state = {
   
   // Handle Comment Submit
   function handleCommentSubmit(event) {
-    event.preventDefault();
-    
-    const commentInput = document.querySelector('#new-comment');
-    const comment = commentInput.value.trim();
-    
-    if (!comment) {
-      alert('Please enter a comment');
-      return;
+  event.preventDefault();
+  
+  const commentInput = document.querySelector('#new-comment');
+  const comment = commentInput.value.trim();
+  
+  if (!comment) {
+    alert('Please enter a comment');
+    return;
+  }
+  
+  // Get note ID from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const noteId = urlParams.get('id');
+  
+  // Submit comment to API
+  fetch('api/notes/comment.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      noteId: noteId,
+      comment: comment
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to add comment');
     }
-    
+    return response.json();
+  })
+  .then(data => {
     // Create new comment element
     const commentElement = document.createElement('div');
     commentElement.className = 'comment';
-    
-    // Get current date in format "Month DD, YYYY"
-    const now = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = now.toLocaleDateString('en-US', options);
-    
     commentElement.innerHTML = `
       <div class="comment-header">
-        <strong>You</strong>
-        <span>${formattedDate}</span>
+        <strong>${data.comment.user}</strong>
+        <span>${data.comment.date}</span>
       </div>
-      <p>${comment}</p>
+      <p>${data.comment.text}</p>
     `;
     
     // Add comment to the list (before the form)
@@ -876,23 +983,11 @@ const state = {
     
     // Clear input
     commentInput.value = '';
-    
-    // Show success message
-    alert('Comment posted successfully!');
-  }
-  
-  // Display Not Found Message
-  function displayNotFoundMessage() {
-    const article = document.querySelector('article');
-    
-    article.innerHTML = `
-      <div style="text-align: center; padding: 2rem;">
-        <h2>Note Not Found</h2>
-        <p>The note you're looking for doesn't exist or has been removed.</p>
-        <a href="index.html" role="button">Back to Notes</a>
-      </div>
-    `;
-  }
+  })
+  .catch(error => {
+    alert(`Error: ${error.message}`);
+  });
+}
 
   // Mock Notes Data for Development
 function getMockNotes() {

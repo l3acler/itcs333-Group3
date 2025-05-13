@@ -45,7 +45,7 @@
             Comments:
         </h3>
         <section>
-            <form>
+            <form id="commentForm">
                 <label for="text">Comment</label>
                 <input type="text" id="text" name="Comment" placeholder="Comment">
                 <small>Leave a Comment</small>
@@ -55,7 +55,7 @@
         </section>
         <hr>
         <section>
-            <form>
+            <form id="filterForm">
               <label for="date">Show Comments After:
               <input type="date" id="date" name="date"></label>
 
@@ -63,16 +63,21 @@
             </form>
         </section>
         
-        <article>Ali: this is a nice review</article>
+        <p id="error" style="color: red;"></p>
+
+        <div id="loading-spinner" style="display: none; text-align: center;">
+          <progress></progress>
+          <p>Loading...</p>
+        </div>
+
+        <div id="comments">
+          <article>
+            <strong>Ali:</strong> this is a nice review <date>30/3/2025</date>
+          </article>
+        </div>
 
         <br>
-        <div role="group">
-            <button href="#">&laquo;</button>
-            <button aria-current="true" href="#">1</button>
-            <button href="#">2</button>
-            <button href="#">3</button>
-            <button href="#">&raquo;</button>
-          </div>
+        <div role="group" id="pagination-wrapper"></div>
 
     </main>
     

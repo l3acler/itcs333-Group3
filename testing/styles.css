@@ -1,0 +1,110 @@
+/* Custom styles to complement Pico CSS */
+:root {
+    --spacing: 1rem;
+}
+
+/* Club cards grid */
+.clubs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing);
+}
+
+/* Club card styling */
+.club-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.club-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.club-card.selected {
+    border: 2px solid var(--primary);
+}
+
+.club-card .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.club-card .card-footer {
+    margin-top: auto;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid var(--primary);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    animation: rotation 1s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Club details */
+.club-details-content {
+    padding: var(--spacing) 0;
+}
+
+/* Error messages */
+.error-message {
+    color: var(--del-color);
+    display: none;
+}
+
+input:invalid + .error-message,
+textarea:invalid + .error-message {
+    display: block;
+}
+
+/* Modal close button */
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: var(--spacing);
+}
+
+.pagination button {
+    min-width: 2.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .club-controls .grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    main .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    aside {
+        margin-top: var(--spacing);
+    }
+}

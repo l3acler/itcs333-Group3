@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review and Comments</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script src="Review&comments.js"></script>
 </head>
 <body>
     <nav>
+        <ul></ul>
         <ul>
-
-        </ul>
-        <ul>
-          <li><a href="Specific Course.html">&laquo;Back to Reviews</a></li>
+          <li><a id="backToCourse" href="Specific Course.html">&laquo;Back to Reviews</a></li>
         </ul>
         <ul>
           <li><strong>Campus Hub</strong></li>
@@ -20,60 +19,59 @@
         <ul>
           <li><a href="#">Login</a></li>
         </ul>
-        <ul>
-
-        </ul>
+        <ul></ul>
     </nav>
 
     <header class="container">
-        <h1>Adel Buabood's Review</h1>
-        <p>Rating: &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F Stars</p>
-        <p>Date: 29/3/2025</p>
+        <h1 id="name">Adel Buabood's Review</h1>
+        <p id="rating">Rating: &#x1F31F &#x1F31F &#x1F31F &#x1F31F &#x1F31F Stars</p>
+        <p id="date">Date: 29/3/2025</p>
     </header>
 
     <main class="container">
-        <h2>
-            Review:
-        </h2>
-        <article>
-            I liked this course and benefited a lot form it.
+        <h2>Review:</h2>
+        <article id="reviewContent">
+            I liked this course and benefited a lot from it.
         </article>
 
         <hr>
-        <h3>
-            Comments:
-        </h3>
+        <h3>Comments:</h3>
         <section>
-            <form>
+            <form id="commentForm">
                 <label for="text">Comment</label>
-                <input type="text" id="text" name="Comment" placeholder="Comment">
+                <input type="text" id="text" name="text" placeholder="Comment">
                 <small>Leave a Comment</small>
 
-              <input type="submit" value="Submit">
+                <input type="submit" value="Submit">
             </form>
         </section>
+        <p id="error" style="color: red;"></p>
         <hr>
+        
+        <!--- Disabled filter form doesn't work for some reason
         <section>
-            <form>
-              <label for="date">Show Comments After:
-              <input type="date" id="date" name="date"></label>
+            <form id="filterForm">
+                Show Comments After:
+                <input type="date" id="date" name="date">
 
-              <input type="submit" value="Filter">
+                <input type="submit" value="Filter">
             </form>
         </section>
-        
-        <article>Ali: this is a nice review</article>
+      -->
+
+        <div id="loading-spinner" style="display: none; text-align: center;">
+          <progress></progress>
+          <p>Loading...</p>
+        </div>
+
+        <div id="comments">
+          <article>
+            <strong>Ali:</strong> this is a nice review <date>30/3/2025</date>
+          </article>
+        </div>
 
         <br>
-        <div role="group">
-            <button href="#">&laquo;</button>
-            <button aria-current="true" href="#">1</button>
-            <button href="#">2</button>
-            <button href="#">3</button>
-            <button href="#">&raquo;</button>
-          </div>
-
+        <div role="group" id="pagination-wrapper"></div>
     </main>
-    
 </body>
 </html>

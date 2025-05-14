@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -13,36 +13,20 @@
 
 <body>
     <main id="main">
-        <a href="./ClubActivities.html"><button id="back-button">Go Back</button></a>
+        <a href="./Index.html"><button id="back-button">Go Back</button></a>
         <section id="create-section">
             <div id="create-container">
-                <form action="">
-                    <label id="label" for="club-name" required>Club Name
-                        <input id="club-name" type="text" placeholder="Enter Club Name">
-                    </label>
-                    <label id="label" for="club-description" required>Club Description
-                        <input id="club-description" type="text" placeholder="Enter Club Description">
-                    </label>
-                    <label id="label" for="club-category">Club Category
-                        <select name="category" id="club-category" aria-label="Select your Club Category..." required>
-                            <option selected disabled value="">Select your Club Category...</option>
-                            <option>Academic</option>
-                            <option>Sports</option>
-                            <option>Cultural</option>
-                            <option>Arts & Creativity</option>
-                            <option>Social</option>
-                            <option>General Interest</option>
-                        </select>
-                    </label>
-                    <label id="label" for="club-logo">
-                        Club Logo
-                        <input type="file">
-                    </label>
-                    <button class="contrast">Create Club</button>
+                <form id="club-form">
+                    <input type="hidden" id="club-id">
+                    <input type="text" id="club-name" placeholder="Club Name" required>
+                    <input type="text" id="club-category" placeholder="Category" required>
+                    <textarea id="club-description" placeholder="Description" required></textarea>
+                    <button type="submit">Save</button>
                 </form>
             </div>
         </section>
     </main>
+    <script src="app.js"></script>
 </body>
 
 </html>

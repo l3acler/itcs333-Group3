@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Hub - Club Activities</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center">Club Activities</h1>
+        
+        <!-- Add Activity Form -->
+        <div class="my-4">
+            <h2 class="text-2xl">Add New Activity</h2>
+            <form id="activityForm" class="space-y-4">
+                <input type="text" id="title" placeholder="Title" class="input w-full border p-2 rounded" required>
+                <textarea id="description" placeholder="Description" class="input w-full border p-2 rounded" required></textarea>
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded">Add Activity</button>
+            </form>
+        </div>
+
+        <!-- Activity List -->
+        <div class="my-4">
+            <h2 class="text-2xl">Activities</h2>
+            <ul id="activityList" class="space-y-4">
+                <!-- List of activities will be inserted here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'https://e5f252c2-de2b-4f17-a365-0ef039fa2293-00-1ndxdydgdwt4a.pike.replit.dev/api.php'; // Replace with your actual API URL
+
+        // Fetch and display activities
+        function fetchActivities() {
+            axios.get(apiUrl)
+                .then(response => {
+                    const activities = response.data;
+                    const activityList = document.getElementById('activityList');
+                    activityList.innerHTML = ''; // Clear previous list
+                    activities.forEach(activity => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('bg-white', 'p-4', 'rounded', 'shadow');
+                        listItem.innerHTML = `
+                            <h3 class="font-bold">${activity.title}</h3>
+                            <p>${activity.description}</p>
+                            <button onclick="deleteActivity(${activity.id})" class="bg-red-500 text-white p-2 rounded mt-2">Delete</button>
+                            <button onclick="editActivity(${activity.id})" class="bg-yellow-500 text-white p-2 rounded mt-2">Edit</button>
+                        `;
+                        activityList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching activities:', error));
+        }
+
+        // Handle form submission
+        document.getElementById('activityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            axios.post(apiUrl, { title, description })
+                .then(response => {
+                    fetchActivities(); // Refresh activity list
+                    document.getElementById('activityForm').reset();
+                })
+                .catch(error => console.error('Error adding activity:', error));
+        });
+
+        // Delete activity
+        function deleteActivity(id) {
+            axios.delete(apiUrl, { data: { id } })
+                .then(response => {
+                    fetchActivities(); // Refresh activity list
+                })
+                .catch(error => console.error('Error deleting activity:', error));
+        }
+
+        // Edit activity (basic functionality, you can expand it)
+        function editActivity(id) {
+            // You can add an edit form, for now just console.log the id
+            console.log('Edit activity:', id);
+        }
+
+        // Initial fetch of activities when the page loads
+        fetchActivities();
+    </script>
+
+</body>
+</html>

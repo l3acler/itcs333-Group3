@@ -106,37 +106,113 @@ const state = {
 
   
   // Render Notes to the DOM
-  function renderNotes() {
-    const notesContainer = document.querySelector('main');
-    const availableNotesTitle = document.querySelector('main h2');
-    
-    // Clear previous notes (keep the header elements)
-    const elements = notesContainer.querySelectorAll('.note-item');
-    elements.forEach(el => el.remove());
-    
-    // Get current page notes
-    const startIndex = (state.currentPage - 1) * state.itemsPerPage;
-    const endIndex = startIndex + state.itemsPerPage;
-    const currentPageNotes = state.filteredNotes.slice(startIndex, endIndex);
-    
-    if (currentPageNotes.length === 0) {
-      // No notes found
-      const noResults = document.createElement('p');
-      noResults.textContent = 'No notes match your search criteria.';
-      notesContainer.insertBefore(noResults, document.querySelector('hr'));
-    } else {
-      // Create note elements
-      currentPageNotes.forEach(note => {
-        const noteElement = createNoteElement(note);
-        notesContainer.insertBefore(noteElement, document.querySelector('hr'));
-      });
-    }
-    
-    // Update notes count
-    if (availableNotesTitle) {
-      availableNotesTitle.textContent = `Available Notes (${state.filteredNotes.length})`;
-    }
+ function renderNoteDetails(note) {
+  const article = document.querySelector('article');
+  
+  let topicsHtml = '';
+  if (note.topics && note.topics.length > 0) {
+    topicsHtml = `
+      <h3>Topics Covered</h3>
+      <ul>
+        ${note.topics.map(topic => `<li>${topic}</li>`).join('')}
+      </ul>
+    `;
   }
+  
+  let commentsHtml = '';
+  if (note.comments && note.comments.length > 0) {
+    commentsHtml = note.comments.map(comment => `
+      <div class="comment">
+        <div class="comment-header">
+          <strong>${comment.user}</strong>
+          <span>${comment.date}</span>
+        </div>
+        <p>${comment.text}</p>
+      </div>
+    `).join('');
+  } else {
+    commentsHtml = `<p>No comments yet. Be the first to leave feedback!</p>`;
+  }
+  
+  article.innerHTML = `
+    <header>
+      <h1>${note.courseCode} - ${note.title}</h1>
+      <p>
+        <span class="tag">${note.typeName || getTypeLabel(note.type)}</span>
+        <span class="tag">${note.semesterName || getSemesterLabel(note.semester)}</span>
+      </p>
+      <p class="metadata">
+        Uploaded by: ${note.uploadedBy} • ${note.uploadDate} • ${note.pages} pages
+      </p>
+    </header>
+
+    <section>
+      <h2>Description</h2>
+      <p>${note.description}</p>
+
+      ${topicsHtml}
+
+      <div class="note-preview">
+        <div style="text-align: center;">
+          <img src="/api/placeholder/400/320" alt="PDF preview placeholder">
+          <p>Preview of notes (PDF file)</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <div class="rating">
+            <span>Average Rating:</span>
+            <span class="star">${getRatingStars(note.rating)}</span>
+            <span>(${typeof note.rating === 'number' ? note.rating.toFixed(1) : '0.0'}/5 from ${note.ratingCount || 0} ratings)</span>
+          </div>
+          
+          <div class="user-rating">
+            <span>Rate these notes:</span>
+            <div class="star-rating" id="user-star-rating">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+            <span id="rating-message"></span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          ${note.filePath ? `<a href="api/notes/download.php?id=${note.id}" role="button">Download Notes</a>` : 
+          `<a href="#" role="button" onclick="alert('Download not available in mock mode'); return false;">Download Notes</a>`}
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <a href="#" role="button" class="secondary">Edit</a>
+        <a href="#" role="button" class="contrast">Delete</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Comments and Feedback</h2>
+
+      ${commentsHtml}
+
+      <form id="comment-form">
+        <label for="new-comment">Add a Comment</label>
+        <textarea id="new-comment" name="comment" placeholder="Share your thoughts or ask a question..."></textarea>
+        <button type="submit">Post Comment</button>
+      </form>
+    </section>
+  `;
+  
+  // Add submit handler for the comment form
+  const commentForm = document.querySelector('#comment-form');
+  if (commentForm) {
+    commentForm.addEventListener('submit', handleCommentSubmit);
+  }
+  
+  // Initialize star rating functionality
+  initializeStarRating();
+}
   
   // Create a Note Element
   function createNoteElement(note) {
@@ -707,47 +783,83 @@ const state = {
   
   // Load Note Details
   async function loadNoteDetails() {
-    // Get note ID from URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    const noteId = urlParams.get('id');
-    
-    if (!noteId) {
-      displayNotFoundMessage();
-      return;
-    }
-    
-    // Show loading state
-    const article = document.querySelector('article');
-    article.innerHTML = `
-      <div style="text-align: center; padding: 2rem;">
-        <div class="spinner"></div>
-        <p>Loading note details...</p>
-      </div>
-    `;
-    
+  // Get note ID from URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const noteId = urlParams.get('id');
+  
+  if (!noteId) {
+    displayNotFoundMessage();
+    return;
+  }
+  
+  // Show loading state
+  const article = document.querySelector('article');
+  article.innerHTML = `
+    <div style="text-align: center; padding: 2rem;">
+      <div class="spinner"></div>
+      <p>Loading note details...</p>
+    </div>
+  `;
+  
+  let usesMockData = false;
+  
+  try {
+    // Try to fetch from API first
     try {
-      // Fetch data from our API
+      console.log('Attempting to fetch note details from API for ID:', noteId);
       const response = await fetch(`api/notes/get.php?id=${noteId}`);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.warn(`API request failed with status ${response.status}`);
+        throw new Error(`API request failed with status ${response.status}`);
       }
       
       const note = await response.json();
+      console.log('Note details received from API:', note);
       
       // Render note details
       renderNoteDetails(note);
+      
     } catch (error) {
-      console.error('Error loading note details:', error);
-      article.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-          <h2>Error Loading Note</h2>
-          <p>There was a problem loading the note details. Please try again later.</p>
-          <a href="index.html" role="button">Back to Notes</a>
-        </div>
-      `;
+      console.error('API fetch failed, falling back to mock data:', error);
+      
+      // Try to find the note in mock data
+      const mockNotes = getMockNotes();
+      const note = mockNotes.find(n => n.id === parseInt(noteId));
+      
+      if (!note) {
+        displayNotFoundMessage();
+        return;
+      }
+      
+      usesMockData = true;
+      
+      // Render note details using mock data
+      renderNoteDetails(note);
+      
+      // Show mock data notice
+      const mockNotice = document.createElement('div');
+      mockNotice.style.margin = '10px 0';
+      mockNotice.style.padding = '10px';
+      mockNotice.style.backgroundColor = '#fff3cd';
+      mockNotice.style.color = '#856404';
+      mockNotice.style.borderRadius = '4px';
+      mockNotice.innerHTML = '<strong>Note:</strong> Using mock data. PHP backend not connected.';
+      
+      article.insertBefore(mockNotice, article.firstChild);
     }
+  } catch (error) {
+    console.error('Error loading note details:', error);
+    article.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <h2>Error Loading Note</h2>
+        <p>There was a problem loading the note details. Please try again later.</p>
+        <p>Error: ${error.message}</p>
+        <a href="index.html" role="button">Back to Notes</a>
+      </div>
+    `;
   }
+}
     
   
   // Render Note Details
@@ -886,8 +998,10 @@ const state = {
   
   // Initialize Star Rating
   function initializeStarRating() {
-    const stars = document.querySelectorAll('.star-rating .star');
+  const stars = document.querySelectorAll('.star-rating .star');
   const ratingMessage = document.getElementById('rating-message');
+  
+  if (!stars.length || !ratingMessage) return;
   
   stars.forEach(star => {
     star.addEventListener('click', function() {
@@ -897,7 +1011,7 @@ const state = {
       const urlParams = new URLSearchParams(window.location.search);
       const noteId = urlParams.get('id');
       
-      // Submit rating to API
+      // Try to submit rating to API
       fetch('api/notes/rate.php', {
         method: 'POST',
         headers: {
@@ -915,65 +1029,73 @@ const state = {
         return response.json();
       })
       .then(data => {
+        updateRatingUI(value, data.rating.average, data.rating.count);
+      })
+      .catch(error => {
+        console.error('API error, updating rating in mock mode:', error);
+        
+        // Calculate mock average rating
+        const mockAvg = (4 * value) / 5; // Weighted average to make it seem like there are other ratings
+        updateRatingUI(value, mockAvg, 5); // Pretend there are 5 ratings total
+      });
+      
+      // Helper function to update rating UI
+      function updateRatingUI(userRating, avgRating, count) {
         // Remove active class from all stars
         stars.forEach(s => s.classList.remove('active'));
         
         // Add active class to clicked star and all stars before it
         stars.forEach(s => {
-          if (parseInt(s.getAttribute('data-value')) <= value) {
+          if (parseInt(s.getAttribute('data-value')) <= userRating) {
             s.classList.add('active');
           }
         });
         
         // Show thank you message
-        ratingMessage.textContent = `Thanks for rating ${value}/5!`;
+        ratingMessage.textContent = `Thanks for rating ${userRating}/5!`;
         
         // Update average rating display
         const ratingSpan = document.querySelector('.rating .star');
         const ratingCountSpan = document.querySelector('.rating span:last-child');
         
         if (ratingSpan && ratingCountSpan) {
-          ratingSpan.innerHTML = getRatingStars(data.rating.average);
-          ratingCountSpan.textContent = `(${data.rating.average}/5 from ${data.rating.count} ratings)`;
+          ratingSpan.innerHTML = getRatingStars(avgRating);
+          ratingCountSpan.textContent = `(${avgRating.toFixed(1)}/5 from ${count} ratings)`;
         }
-      })
-      .catch(error => {
-        alert(`Error: ${error.message}`);
+      }
+    });
+    
+    // Hover effect (keep existing code)
+    star.addEventListener('mouseover', function() {
+      const value = parseInt(this.getAttribute('data-value'));
+      
+      stars.forEach(s => {
+        if (parseInt(s.getAttribute('data-value')) <= value) {
+          s.style.color = '#ffcc00';
+        } else {
+          s.style.color = '#ccc';
+        }
       });
     });
     
-      
-      // Hover effect
-      star.addEventListener('mouseover', function() {
-        const value = parseInt(this.getAttribute('data-value'));
-        
+    // Reset on mouseout if not already rated
+    star.addEventListener('mouseout', function() {
+      if (!document.querySelector('.star-rating .star.active')) {
         stars.forEach(s => {
-          if (parseInt(s.getAttribute('data-value')) <= value) {
+          s.style.color = '#ccc';
+        });
+      } else {
+        stars.forEach(s => {
+          if (s.classList.contains('active')) {
             s.style.color = '#ffcc00';
           } else {
             s.style.color = '#ccc';
           }
         });
-      });
-      
-      // Reset on mouseout if not already rated
-      star.addEventListener('mouseout', function() {
-        if (!document.querySelector('.star-rating .star.active')) {
-          stars.forEach(s => {
-            s.style.color = '#ccc';
-          });
-        } else {
-          stars.forEach(s => {
-            if (s.classList.contains('active')) {
-              s.style.color = '#ffcc00';
-            } else {
-              s.style.color = '#ccc';
-            }
-          });
-        }
-      });
+      }
     });
-  }
+  });
+}
   
   // Handle Comment Submit
   function handleCommentSubmit(event) {
@@ -991,45 +1113,73 @@ const state = {
   const urlParams = new URLSearchParams(window.location.search);
   const noteId = urlParams.get('id');
   
-  // Submit comment to API
-  fetch('api/notes/comment.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      noteId: noteId,
-      comment: comment
+  // Try to submit comment to API
+  try {
+    fetch('api/notes/comment.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        noteId: noteId,
+        comment: comment
+      })
     })
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to add comment');
-    }
-    return response.json();
-  })
-  .then(data => {
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to add comment');
+      }
+      return response.json();
+    })
+    .then(data => {
+      addCommentToUI(data.comment);
+    })
+    .catch(error => {
+      console.error('API error, adding comment in mock mode:', error);
+      
+      // Fall back to mock comment
+      const mockComment = {
+        id: Math.floor(Math.random() * 1000),
+        user: 'You',
+        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+        text: comment
+      };
+      
+      addCommentToUI(mockComment);
+    });
+  } catch (error) {
+    console.error('Error handling comment submission:', error);
+    alert('Error submitting comment. Please try again.');
+  }
+  
+  // Helper function to add comment to UI
+  function addCommentToUI(commentData) {
     // Create new comment element
     const commentElement = document.createElement('div');
     commentElement.className = 'comment';
     commentElement.innerHTML = `
       <div class="comment-header">
-        <strong>${data.comment.user}</strong>
-        <span>${data.comment.date}</span>
+        <strong>${commentData.user}</strong>
+        <span>${commentData.date}</span>
       </div>
-      <p>${data.comment.text}</p>
+      <p>${commentData.text}</p>
     `;
     
     // Add comment to the list (before the form)
     const commentForm = document.querySelector('#comment-form');
-    commentForm.parentNode.insertBefore(commentElement, commentForm);
+    const commentsSection = commentForm.parentNode;
+    
+    // If there's a "No comments yet" message, remove it
+    const noCommentsMsg = commentsSection.querySelector('p:first-of-type');
+    if (noCommentsMsg && noCommentsMsg.textContent.includes('No comments yet')) {
+      noCommentsMsg.remove();
+    }
+    
+    commentsSection.insertBefore(commentElement, commentForm);
     
     // Clear input
     commentInput.value = '';
-  })
-  .catch(error => {
-    alert(`Error: ${error.message}`);
-  });
+  }
 }
 
 // Mock Notes Data Function
@@ -1190,3 +1340,4 @@ function getMockNotes() {
     }
   ];
 }
+

@@ -1,7 +1,7 @@
 const apiUrl = "https://e5f252c2-de2b-4f17-a365-0ef039fa2293-00-1ndxdydgdwt4a.pike.replit.dev/clubs_api.php";
 
 let currentPage = 1;
-const itemsPerPage = 6;
+const itemsPerPage = 8;
 let filteredClubs = [];
 
 let allClubs = [];
@@ -58,16 +58,18 @@ function createCard(club) {
   const card = document.createElement("div");
   card.className = "card";
   card.innerHTML = `
-      <h3>${club.name}</h3>
-      <p><strong>Category:</strong> ${club.category}</p>
-      <p>${club.description}</p>
-      <div class="card-actions">
-        <button onclick='editClub(${JSON.stringify(club)})'>Edit</button>
-        <button class="secondary" onclick='deleteClub(${club.id})'>Delete</button>
-      </div>
-    `;
+    <h3>${club.name}</h3>
+    <p><strong>Category:</strong> ${club.category}</p>
+    <p>${club.description}</p>
+    <div class="card-actions">
+      <button onclick='editClub(${JSON.stringify(club)})'>Edit</button>
+      <button class="secondary" onclick='deleteClub(${club.id})'>Delete</button>
+      <a href="club.html?id=${club.id}" class="contrast"><button>View More</button></a>
+    </div>
+  `;
   return card;
 }
+
 
 function renderClubCards(clubs) {
   filteredClubs = clubs;

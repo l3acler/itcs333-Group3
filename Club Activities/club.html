@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Club Details</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: var(--pico-background-color);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 600px;
+      width: 100%;
+      padding: 1rem;
+    }
+
+    .card {
+      padding: 1rem 1.5rem;
+      border-radius: var(--pico-border-radius);
+      box-shadow: var(--pico-box-shadow);
+      background: var(--pico-card-background-color, white);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-grid">
+    <div class="card">
+      <a href="index.html" class="secondary back-link"><button>&larr; Back to Clubs</button></a>
+      <h3 id="clubName">Loading...</h3>
+      <p><strong>Category:</strong> <span id="clubCategory"></span></p>
+      <p id="clubDescription"></p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const apiUrl = "https://e5f252c2-de2b-4f17-a365-0ef039fa2293-00-1ndxdydgdwt4a.pike.replit.dev/clubs_api.php";
+
+    async function loadClubDetails() {
+      if (!id) {
+        document.querySelector('.card').innerHTML = "<p>Club ID not provided.</p>";
+        return;
+      }
+
+      const res = await fetch(`${apiUrl}?action=fetch`);
+      const clubs = await res.json();
+      const club = clubs.find(c => c.id == id);
+
+      if (!club) {
+        document.querySelector('.card').innerHTML = "<p>Club not found.</p>";
+        return;
+      }
+
+      document.getElementById("clubName").textContent = club.name;
+      document.getElementById("clubCategory").textContent = club.category;
+      document.getElementById("clubDescription").textContent = club.description;
+    }
+
+    loadClubDetails();
+  </script>
+</body>
+</html>

@@ -16,6 +16,7 @@ nav li {
     font-size: 28px;
 
 }
+
 .logo a {
     text-decoration: none;
 }
@@ -78,14 +79,15 @@ nav li {
     width: 30%;
     height: 50%;
     text-align: center;
-    
+
 }
 
 #create-section {
     background-color: var(--pico-off-color);
     height: 25vh;
-    
+
 }
+
 #create-section-div {
     height: 100%;
     display: flex;
@@ -116,10 +118,11 @@ nav li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
 }
 
-.upcoming-activity-name, .upcoming-activity-club {
+.upcoming-activity-name,
+.upcoming-activity-club {
     width: 50%;
 }
 
@@ -130,13 +133,13 @@ nav li {
 #footer {
     background-color: var(--pico-off-color);
 }
+
 #footer p {
     text-align: center;
     margin: 0;
 }
 
 
-/* css for search page */
 
 #club-list {
     height: auto;
@@ -147,4 +150,23 @@ nav li {
     margin: 12px;
     border-radius: 6px;
     background-color: var(--pico-off-color);
+}
+
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.club-card {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--pico-card-background-color, #ffffff);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--pico-muted-border-color, #ddd);
+}
+
+.club-card h3 {
+    margin-top: 0;
 }

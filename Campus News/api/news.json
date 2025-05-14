@@ -1,0 +1,18 @@
+
+    async function fetchNews() {
+  loading.style.display = 'block';
+  try {
+    const response = await fetch('/Campus News/api/news.php');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    newsData = data;
+    renderNews();
+  } catch (error) {
+    newsList.innerHTML = '<p>Error loading news. Please try again later.</p>';
+    console.error('Fetch error:', error);
+  } finally {
+    loading.style.display = 'none';
+  }
+}

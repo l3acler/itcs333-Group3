@@ -17,7 +17,7 @@ fetch("https://e5f252c2-de2b-4f17-a365-0ef039fa2293-00-1ndxdydgdwt4a.pike.replit
         <h3>${club.name}</h3>
   <p><strong>Category:</strong> ${club.category}</p>
   <p>${club.description}</p>
-  <a href="club-details.html?id=${club.id}" class="contrast outline"><button>View Details</button></a>
+  <a href="Club-Details.html?id=${club.id}" class="contrast outline"><button>View Details</button></a>
       `;
             clubGrid.appendChild(card);
         });

@@ -44,35 +44,66 @@ const state = {
   
   // Fetch Notes Data
   async function fetchNotes() {
+  try {
+    showLoading(true);
+    
+    let usesMockData = false;
+    let notesData = [];
+    
     try {
-      showLoading(true);
+      console.log('Attempting to fetch notes from API...');
+      const response = await fetch('api/notes/index.php');
       
-      try {
-        // Fetch data from our API
-        const response = await fetch('api/notes/index.php');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // Update state with the notes from our API
-        state.notes = data.notes || [];
-        state.filteredNotes = [...state.notes];
-        
-        // Render notes
-        renderNotes();
-        updatePagination();
-        
-        showLoading(false);
-      } catch (error) {
-        handleError(error);
+      if (!response.ok) {
+        console.warn(`API request failed with status ${response.status}`);
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('API data received:', data);
+      
+      if (data && data.notes) {
+        notesData = data.notes;
+      } else {
+        throw new Error('API response missing notes data');
       }
     } catch (error) {
-      handleError(error);
+      console.error('API fetch failed, falling back to mock data:', error);
+      notesData = getMockNotes();
+      usesMockData = true;
     }
+    
+    // Update state
+    state.notes = notesData;
+    state.filteredNotes = [...notesData];
+    
+    // Render notes
+    renderNotes();
+    updatePagination();
+    
+    showLoading(false);
+    
+    // Show mock data notice if using mock data
+    if (usesMockData) {
+      const mockNotice = document.createElement('div');
+      mockNotice.style.margin = '10px 0';
+      mockNotice.style.padding = '10px';
+      mockNotice.style.backgroundColor = '#fff3cd';
+      mockNotice.style.color = '#856404';
+      mockNotice.style.borderRadius = '4px';
+      mockNotice.innerHTML = '<strong>Note:</strong> Using mock data. PHP backend not connected.';
+      
+      const container = document.querySelector('main');
+      if (container) {
+        container.insertBefore(mockNotice, container.firstChild);
+      }
+    }
+  } catch (error) {
+    handleError(error);
   }
+}
+
+
   
   // Render Notes to the DOM
   function renderNotes() {
@@ -185,63 +216,75 @@ const state = {
   
   // Attach Event Listeners
   function attachEventListeners() {
-    // Search and filter form
-    const filterForm = document.querySelector('#search-filters form');
-    if (filterForm) {
-      filterForm.addEventListener('submit', handleFilterSubmit);
-    }
-    
-    // Pagination buttons
-    const paginationButtons = document.querySelectorAll('.pagination button');
-    if (paginationButtons) {
-      paginationButtons.forEach(button => {
-        button.addEventListener('click', handlePaginationClick);
-      });
-    }
-    
-    // Sort dropdown
-    const sortSelect = document.querySelector('#sort-by');
-    if (sortSelect) {
-      sortSelect.addEventListener('change', handleSortChange);
-    }
+  // Search and filter form
+  const filterForm = document.querySelector('#search-filters form');
+  if (filterForm) {
+    filterForm.addEventListener('submit', handleFilterSubmit);
   }
+  
+  // Pagination buttons
+  const paginationButtons = document.querySelectorAll('.pagination button');
+  if (paginationButtons) {
+    paginationButtons.forEach(button => {
+      button.addEventListener('click', handlePaginationClick);
+    });
+  }
+  
+  // Sort dropdown - make sure the selector matches your HTML
+  const sortSelect = document.querySelector('select[name="sort"]');
+  if (sortSelect) {
+    console.log('Sort dropdown found:', sortSelect);
+    sortSelect.addEventListener('change', function(e) {
+      console.log('Sort changed to:', e.target.value);
+      handleSortChange(e);
+    });
+  } else {
+    console.warn('Sort dropdown not found in the DOM');
+  }
+}
   
   // Handle Sort Change
   function handleSortChange(event) {
-    const sortOption = event.target.value;
-    
-    if (!sortOption) return;
-    
-    // Sort the filtered notes
-    switch (sortOption) {
-      case 'date-desc':
-        state.filteredNotes.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
-        break;
-      case 'date-asc':
-        state.filteredNotes.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
-        break;
-      case 'name-asc':
-        state.filteredNotes.sort((a, b) => a.courseCode.localeCompare(b.courseCode));
-        break;
-      case 'name-desc':
-        state.filteredNotes.sort((a, b) => b.courseCode.localeCompare(a.courseCode));
-        break;
-      case 'rating-desc':
-        state.filteredNotes.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'rating-asc':
-        state.filteredNotes.sort((a, b) => a.rating - b.rating);
-        break;
-      default:
-        // Default to most recent
-        state.filteredNotes.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
-    }
-    
-    // Reset to first page and re-render
-    state.currentPage = 1;
-    renderNotes();
-    updatePagination();
+  const sortOption = event.target.value;
+  
+  if (!sortOption) return;
+  
+  // Sort the filtered notes
+  switch (sortOption) {
+    case 'date-desc':
+    case 'most-recent':
+      state.filteredNotes.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+      break;
+    case 'date-asc':
+    case 'oldest':
+      state.filteredNotes.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+      break;
+    case 'name-asc':
+    case 'a-z':
+      state.filteredNotes.sort((a, b) => a.courseCode.localeCompare(b.courseCode));
+      break;
+    case 'name-desc':
+    case 'z-a':
+      state.filteredNotes.sort((a, b) => b.courseCode.localeCompare(a.courseCode));
+      break;
+    case 'rating-desc':
+    case 'highest-rated':
+      state.filteredNotes.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      break;
+    case 'rating-asc':
+    case 'lowest-rated':
+      state.filteredNotes.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+      break;
+    default:
+      // Default to most recent
+      state.filteredNotes.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
   }
+  
+  // Reset to first page and re-render
+  state.currentPage = 1;
+  renderNotes();
+  updatePagination();
+}
   
   // Handle Filter Submit
   function handleFilterSubmit(event) {
@@ -987,6 +1030,66 @@ const state = {
   .catch(error => {
     alert(`Error: ${error.message}`);
   });
+}
+
+// Mock Notes Data Function
+function getMockNotes() {
+  return [
+    {
+      id: 1,
+      courseCode: 'ITCS333',
+      courseName: 'Database Systems',
+      title: 'SQL Fundamentals',
+      type: 'lecture',
+      semester: 'spring2025',
+      uploadedBy: 'Ahmed Ali',
+      uploadDate: 'Mar 29, 2025',
+      pages: 15,
+      description: 'Comprehensive notes on SQL queries, joins, and database normalization from weeks 3-5.',
+      instructor: 'Dr. Hassan',
+      topics: [
+        "SQL Queries", "Database Normalization", "Joins"
+      ],
+      rating: 4.2,
+      ratingCount: 15
+    },
+    {
+      id: 2,
+      courseCode: 'ITCS214',
+      courseName: 'Data Structures',
+      title: 'Final Exam Study Guide',
+      type: 'study-guide',
+      semester: 'spring2025',
+      uploadedBy: 'Fatima Hussein',
+      uploadDate: 'Apr 2, 2025',
+      pages: 8,
+      description: 'Complete study guide covering trees, graphs, sorting algorithms and practice problems.',
+      instructor: 'Dr. Noor',
+      topics: [
+        "Trees", "Graphs", "Sorting Algorithms"
+      ],
+      rating: 4.8,
+      ratingCount: 10
+    },
+    {
+      id: 3,
+      courseCode: 'ITCS380',
+      courseName: 'Software Engineering',
+      title: 'Agile Methodology',
+      type: 'lecture',
+      semester: 'spring2025',
+      uploadedBy: 'Mohammed Rafiq',
+      uploadDate: 'Mar 15, 2025',
+      pages: 12,
+      description: 'Detailed notes on Scrum, Kanban, and XP with real-world examples.',
+      instructor: 'Prof. Khalid',
+      topics: [
+        "Agile", "Scrum", "Kanban"
+      ],
+      rating: 3.9,
+      ratingCount: 8
+    }
+  ];
 }
 
   // Mock Notes Data for Development

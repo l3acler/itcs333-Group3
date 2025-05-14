@@ -1,0 +1,45 @@
+[
+  {
+    "id": "1",
+    "name": "Football Club",
+    "category": "Sports",
+    "description": "Weekly football matches and team training.",
+    "date": "2024-10-01"
+  },
+  {
+    "id": "2",
+    "name": "Chess Club",
+    "category": "Academic",
+    "description": "Meet weekly to play chess and study tactics.",
+    "date": "2024-11-15"
+  },
+  {
+    "id": "3",
+    "name": "Drama Society",
+    "category": "Arts",
+    "description": "Acting workshops and performances every semester.",
+    "date": "2025-01-20"
+  },
+  {
+    "id": "4",
+    "name": "Basketball Club",
+    "category": "Sports",
+    "description": "Friendly matches and competitive tournaments.",
+    "date": "2024-08-20"
+  },
+  {
+    "id": "5",
+    "name": "Photography Club",
+    "category": "Arts",
+    "description": "Photo walks, exhibitions, and editing workshops.",
+    "date": "2025-02-10"
+  },
+  {
+    "id": "6",
+    "name": "Coding Club",
+    "category": "Academic",
+    "description": "Learn programming and work on projects together.",
+    "date": "2025-03-01"
+  }
+]
+

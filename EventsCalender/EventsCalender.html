@@ -19,6 +19,7 @@
     <br>
     <select id="filterType" style="width: 300px">
       <option selected disabled>Select event by type</option>
+      <option>All</option>
       <option>Workshop</option>
       <option>Seminar</option>
       <option>Festival</option>
@@ -32,9 +33,7 @@
     </select>
   </form>
 
-  <div id="eventList" class="box">
-
-  </div>
+  <div id="eventList" class="box"></div>
 
   <a href="#creat">
     <button>+ add new event</button>
@@ -46,27 +45,37 @@
     <form>
       <label>
         Event name
-        <input type="text" placeholder="Event Name..." required>
+        <input type="text" name="name" placeholder="Event Name..." required>
       </label>
 
       <label>
         Date
-        <input type="date" required>
+        <input type="date" name="date" required>
       </label>
 
       <label>
         Time
-        <input type="time" required>
+        <input type="time" name="time" required>
       </label>
 
       <label>
         Location
-        <input type="text" placeholder="Event Location..." required>
+        <input type="text" name="location" placeholder="Event Location..." required>
+      </label>
+
+      <label>
+        Type
+        <select name="type" required>
+          <option selected disabled>...type of the event</option>
+          <option>Workshop</option>
+          <option>Seminar</option>
+          <option>Festival</option>
+        </select>
       </label>
 
       <label>
         Event Description
-        <input type="text" placeholder="Describe Event..." required>
+        <input type="text" name="description" placeholder="Describe Event..." required>
       </label>
 
       <button type="reset">Reset</button>

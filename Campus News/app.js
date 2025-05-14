@@ -14,20 +14,20 @@ const itemsPerPage = 5; // Change this to how many news per page you want
 async function fetchNews() {
   loading.style.display = 'block';
   try {
-    const response = await fetch('news.json'); // 🔥 Make sure you have a news.json file!
+    const response = await fetch('https://59165beb-ca1e-4025-8c73-62628dfe2fa1-00-2sv19xqz4xzf1.sisko.replit.dev/CampusNews/api/news.php');
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    newsData = data;
+    newsData = data.data; // Adjust based on your API response structure
     renderNews();
   } catch (error) {
-    newsList.innerHTML = '<p>Error loading news. Please try again later.</p>';
+    newsList.innerHTML = `<p>Error loading news: ${error.message}</p>`;
     console.error('Fetch error:', error);
   } finally {
     loading.style.display = 'none';
   }
-}
+} v
 
 // Render news
 function renderNews() {

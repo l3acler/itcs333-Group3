@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Course Notes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 0.25rem;
+        }
+        .file-upload {
+            border: 2px dashed #ccc;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul></ul>
+        <ul>
+          <li><a href="index.html">&laquo;Back to Notes</a></li>
+        </ul>
+        <ul>
+          <li><strong>Campus Hub</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#">Login</a></li>
+        </ul>
+        <ul></ul>
+    </nav>
+
+    <header class="container">
+        <h1>Add New Course Notes</h1>
+        <p>Share your notes with fellow students</p>
+    </header>
+
+    <main class="container">
+        <form>
+            <div class="grid">
+                <div>
+                    <label for="course-code" class="required">Course Code</label>
+                    <input type="text" id="course-code" name="course-code" placeholder="E.g., ITCS333" required>
+                </div>
+                <div>
+                    <label for="course-name" class="required">Course Name</label>
+                    <input type="text" id="course-name" name="course-name" placeholder="E.g., Database Systems" required>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label for="instructor">Instructor</label>
+                    <input type="text" id="instructor" name="instructor" placeholder="Instructor's name">
+                </div>
+                <div>
+                    <label for="semester" class="required">Semester</label>
+                    <select id="semester" name="semester" required>
+                        <option value="">Select Semester</option>
+                        <option value="spring2025">Spring 2025</option>
+                        <option value="fall2024">Fall 2024</option>
+                        <option value="summer2024">Summer 2024</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="note-title" class="required">Note Title</label>
+            <input type="text" id="note-title" name="note-title" placeholder="A descriptive title for your notes" required>
+
+            <label for="note-type" class="required">Note Type</label>
+            <select id="note-type" name="note-type" required>
+                <option value="">Select Note Type</option>
+                <option value="lecture">Lecture Notes</option>
+                <option value="study-guide">Study Guide</option>
+                <option value="exam-prep">Exam Prep</option>
+                <option value="summary">Course Summary</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="description" class="required">Description</label>
+            <textarea id="description" name="description" placeholder="Provide a brief description of what these notes cover..." required></textarea>
+
+            <label for="topics-covered">Topics Covered</label>
+            <input type="text" id="topics-covered" name="topics-covered" placeholder="E.g., SQL basics, Joins, Normalization">
+
+            <div class="file-upload">
+                <label for="notes-file" class="required">Upload Notes File</label>
+                <input type="file" id="notes-file" name="notes-file" required>
+                <small>Accepted formats: PDF, DOCX, PPT (Max size: 10MB)</small>
+            </div>
+
+            <fieldset>
+                <legend>Visibility Options</legend>
+                <label for="public">
+                    <input type="radio" id="public" name="visibility" value="public" checked>
+                    Public (visible to all users)
+                </label>
+                <label for="course-students">
+                    <input type="radio" id="course-students" name="visibility" value="course-students">
+                    Course Students Only
+                </label>
+            </fieldset>
+
+            <div class="grid">
+                <div>
+                    <a href="index.html" role="button" class="secondary">Cancel</a>
+                </div>
+                <div>
+                    <button type="submit">Submit Notes</button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer class="container">
+        <small>Campus Hub &copy; 2025</small>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

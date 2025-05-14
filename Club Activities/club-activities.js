@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p>${club.description}</p>
             <button onclick="editClub(${club.id})">Edit</button>
             <button onclick="deleteClub(${club.id})">Delete</button>
+              <a href="club-details.html?id=${club.id}" class="contrast outline"><button>View Details</button></a>
           `;
           clubList.appendChild(div);
         });
@@ -94,44 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const payload = {
-      name: name.value,
-      description: description.value,
-      category: category.value,
-      meeting_time: meetingTime.value,
-    };
-    const id = clubId.value;
-
-    const method = id ? "PUT" : "POST";
-    const url = id ? `${API_URL}?id=${id}` : API_URL;
-
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-      .then(res => res.json())
-      .then(() => {
-        form.reset();
-        formContainer.style.display = "none";
-        fetchClubs(1);
-      });
-  });
-
-  cancelEditBtn.addEventListener("click", () => {
-    form.reset();
-    clubId.value = "";
-    formContainer.style.display = "none";
-  });
-
-  showFormBtn.addEventListener("click", () => {
-    form.reset();
-    clubId.value = "";
-    document.getElementById("formTitle").textContent = "Create Club";
-    formContainer.style.display = "block";
-  });
+  
 
   searchInput.addEventListener("input", () => fetchClubs(1));
   categoryFilter.addEventListener("change", () => fetchClubs(1));

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Notes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="styles.css">
     <style>
         .note-item {
             margin-bottom: 1rem;
@@ -88,8 +89,21 @@
             <div>
                 <h2>Available Notes</h2>
             </div>
-            <div>
-                <a href="create-note.html" role="button">Add New Notes</a>
+            <div class="grid">
+                <div>
+                    <label for="sort-by">Sort By</label>
+                    <select id="sort-by" name="sort">
+                        <option value="date-desc">Most Recent</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="name-asc">Course Code (A-Z)</option>
+                        <option value="name-desc">Course Code (Z-A)</option>
+                        <option value="rating-desc">Highest Rated</option>
+                        <option value="rating-asc">Lowest Rated</option>
+                    </select>
+                </div>
+                <div>
+                    <a href="create-note.html" role="button">Add New Notes</a>
+                </div>
             </div>
         </div>
 
@@ -149,5 +163,6 @@
     <footer class="container">
         <small>Campus Hub &copy; 2025</small>
     </footer>
+    <script src="app.js"></script>
 </body>
 </html>

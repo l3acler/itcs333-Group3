@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p>${club.description}</p>
             <button onclick="editClub(${club.id})">Edit</button>
             <button onclick="deleteClub(${club.id})">Delete</button>
-              <a href="club-details.html?id=${club.id}" class="contrast outline"><button>View Details</button></a>
+              <a href="Club-Details.html?id=${club.id}" class="contrast outline"><button>View Details</button></a>
           `;
           clubList.appendChild(div);
         });

@@ -1,4 +1,4 @@
-const apiUrl = "https://e5f252c2-de2b-4f17-a365-0ef039fa2293-00-1ndxdydgdwt4a.pike.replit.dev/clubs_api.php"; // e.g. https://your-repl.replit.app/clubs_api.php
+const apiUrl = "https://e5f252c2-de2b-4f17-a365-0ef039fa2293-00-1ndxdydgdwt4a.pike.replit.dev/clubs_api.php";
 
 let allClubs = [];
 
@@ -27,7 +27,7 @@ let allClubs = [];
     alert(result.success ? "Saved successfully!" : result.error || "Error");
     clearForm();
     await loadClubs();
-    filterClubs(document.getElementById("search").value); // refresh visible cards
+    filterClubs(document.getElementById("search").value);
   });
 
   function clearForm() {

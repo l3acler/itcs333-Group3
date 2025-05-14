@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Events Calendar</title>
+  <link rel="stylesheet" href="EventsStyle.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
+  <script src="Script.js" defer></script>
+</head>
+
+<body>
+<main class="container">
+  <h1>Events Calendar</h1>
+
+  <form id="start">
+    <label for="events">All Events</label>
+    <input id="events" type="search" placeholder="Search Events..." style="width: 300px">
+
+    <br>
+    <select id="filterType" style="width: 300px">
+      <option selected disabled>Select event by type</option>
+      <option>Workshop</option>
+      <option>Seminar</option>
+      <option>Festival</option>
+    </select>
+
+    <br>
+    <select id="sortBy" style="width: 300px">
+      <option selected disabled>Sort by</option>
+      <option value="date">Date</option>
+      <option value="time">Time</option>
+    </select>
+  </form>
+
+  <div id="eventList" class="box">
+
+  </div>
+
+  <a href="#creat">
+    <button>+ add new event</button>
+  </a>
+
+  <br><br>
+
+  <div id="creat">
+    <form>
+      <label>
+        Event name
+        <input type="text" placeholder="Event Name..." required>
+      </label>
+
+      <label>
+        Date
+        <input type="date" required>
+      </label>
+
+      <label>
+        Time
+        <input type="time" required>
+      </label>
+
+      <label>
+        Location
+        <input type="text" placeholder="Event Location..." required>
+      </label>
+
+      <label>
+        Event Description
+        <input type="text" placeholder="Describe Event..." required>
+      </label>
+
+      <button type="reset">Reset</button>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <a href="#start">Back to listing</a>
+  <br><br>
+  <footer class="container">Campus Hub</footer>
+</main>
+</body>
+</html>

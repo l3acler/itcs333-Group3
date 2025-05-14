@@ -26,52 +26,58 @@
   </header>
 
   <main id="main">
-    <section class="container">
-      <button id="showForm">➕ Add New Club</button>
-      <div id="clubForm" style="display:none;">
-        <h2 id="formTitle">Create Club</h2>
-        <form id="clubFormElement">
-          <input type="hidden" id="clubId" />
-          <label>Name<input type="text" id="name" required /></label>
-          <label>Description<textarea id="description" required></textarea></label>
-          <label>Category<input type="text" id="category" required /></label>
-          <label>Meeting Time<input type="text" id="meeting_time" required /></label>
-          <button type="submit">Submit</button>
-          <button type="button" id="cancelEdit">Cancel</button>
-        </form>
+
+    <section id="create-section">
+      <div class="container" id="create-section-div">
+        <h2 id="create-section-heading">Create Your Own Club!</h2>
+        <a href="./CreateClub.html"><button id="create-section-button" class="contrast">Create Now</button></a>
       </div>
     </section>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campus Hub - Club Activities</title>
+  <link rel="stylesheet" href="https://unpkg.com/pico.css">
+  <style>
+    .hidden { display: none; }
+    .actions button { margin-right: 5px; }
+  </style>
+</head>
+<body>
 
-    <section class="container">
-      <h2>All Clubs</h2>
-      <div class="grid">
-        <input type="search" id="searchInput" placeholder="Search by club name..." />
-        <select id="categoryFilter">
-          <option value="">All Categories</option>
-          <option value="Sports">Sports</option>
-          <option value="Academic">Academic</option>
-          <option value="Arts">Arts</option>
-          <option value="Technology">Technology</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div id="clubList"></div>
-      <div id="pagination" class="flex" style="gap: 0.5rem; margin-top: 1rem;"></div>
+  <main class="container">
+    <h1>Campus Hub - Clubs</h1>
 
-    </section>
+    <!-- Search Bar -->
+    <input type="text" id="search-input" placeholder="Search clubs..." oninput="searchClubs()">
+    <button onclick="searchClubs()">Search</button>
+
+    <!-- Club Form -->
+    <h2>Add New Club</h2>
+    <form id="club-form" onsubmit="addClub(event)">
+        <input type="text" id="club-name" placeholder="Club Name" required>
+        <textarea id="club-description" placeholder="Club Description" required></textarea>
+        <button type="submit">Add Club</button>
+    </form>
+
+    <!-- Clubs Listing -->
+    <div id="clubs-container"></div>
+
+    
   </main>
 
-  <script src="club-activities.js"></script>
+  <script src="clubs.js"></script>
 </body>
-
 </html>
 
 
-</main>
-<footer id="footer">
-  <p> &copy; 2025 Campus Hub | All rights reserved.</p>
-</footer>
-
+  </main>
+  <footer id="footer">
+    <p> &copy; 2025 Campus Hub | All rights reserved.</p>
+  </footer>
+  
 </body>
 
 </html>

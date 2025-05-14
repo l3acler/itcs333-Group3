@@ -1,14 +1,14 @@
 <?php
-// Suppress PHP warnings and notices
-error_reporting(E_ERROR | E_PARSE);
-
-// Ensure no output before JSON
-ob_start();
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+// Suppress PHP warnings and notices
+error_reporting(E_ERROR | E_PARSE);
+// Ensure no output before JSON
+ob_start();
+
+
 
 $host = "127.0.0.1";
 $user = getenv("db_user");
@@ -28,30 +28,76 @@ $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 switch($method) {
     case 'GET':
         header('Content-Type: application/json');
-        if ($path == '/courses') {
+        if (preg_match('/\/courses\/(\d+)/', $path, $matches)) {
+            $id = $matches[1];
             try {
-                // Alias the `id` column as `courseId`
+                $stmt = $pdo->prepare("SELECT id AS courseId, courseCode FROM courses WHERE id = ?");
+                $stmt->execute([$id]);
+                $course = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($course) {
+                    echo json_encode($course, JSON_NUMERIC_CHECK);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Course not found']);
+                }
+            } catch(PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
+        } elseif ($path == '/courses') {
+            try {
                 $stmt = $pdo->query("SELECT id AS courseId, courseCode FROM courses");
                 $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo json_encode(['status' => 200, 'data' => $courses], JSON_NUMERIC_CHECK);
-            } catch (PDOException $e) {
+                echo json_encode($courses, JSON_NUMERIC_CHECK);
+            } catch(PDOException $e) {
                 http_response_code(500);
-                echo json_encode(['status' => 500, 'error' => $e->getMessage()]);
+                echo json_encode(['error' => $e->getMessage()]);
             }
-            exit;
+        } elseif (preg_match('/\/reviews\/(\d+)/', $path, $matches)) {
+            $id = $matches[1];
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM reviews WHERE reviewId = ?");
+                $stmt->execute([$id]);
+                $review = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($review) {
+                    echo json_encode($review);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Review not found']);
+                }
+            } catch(PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
         } elseif ($path == '/reviews') {
             try {
                 $stmt = $pdo->query("SELECT * FROM reviews");
                 $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo json_encode(['status' => 200, 'data' => $reviews]);
+                echo json_encode($reviews);
             } catch(PDOException $e) {
                 echo json_encode(['status' => 500, 'error' => $e->getMessage()]);
+            }
+        } elseif (preg_match('/\/comments\/(\d+)/', $path, $matches)) {
+            $id = $matches[1];
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM comments WHERE commentId = ?");
+                $stmt->execute([$id]);
+                $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($comment) {
+                    echo json_encode($comment);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Comment not found']);
+                }
+            } catch(PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
             }
         } elseif ($path == '/comments') {
             try {
                 $stmt = $pdo->query("SELECT * FROM comments");
                 $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo json_encode(['status' => 200, 'data' => $comments]);
+                echo json_encode($comments);
             } catch(PDOException $e) {
                 echo json_encode(['status' => 500, 'error' => $e->getMessage()]);
             }

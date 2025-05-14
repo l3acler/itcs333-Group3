@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            if (data.status === 200 && Array.isArray(data.data)) {
-                state.set = data.data;
+            if (Array.isArray(data)) {
+                state.set = data;
                 displayReviews();
                 setupPagination();
             }
